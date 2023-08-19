@@ -16,8 +16,11 @@ import { Header } from "./Header";
 // Helpers
 import { onAction, onKeyDown } from "./handleAction";
 
+// CSS
+import "./textEditor.css";
+
 // Constants
-import { INITIAL_FONT, FONT } from "../../constants";
+import { INITIAL_FONT, FONT, ACTION_TYPES } from "../../constants";
 
 const reducer = (
   state: FONT,
@@ -122,17 +125,33 @@ export const TextEditor = () => {
     };
   }, [handleAction, handleKeyDown]);
 
+  const resetState = useCallback(
+    (event: any) => {
+      event.preventDefault();
+      handleAction(ACTION_TYPES.CLEAR);
+    },
+    [handleAction]
+  );
+
+  const blockStyleFn = (block: any) => {
+    console.log(block);
+    return "superFancyBlock";
+  };
+
   return (
     <div className="h-full w-full bg-slate-100 flex flex-col justify-center items-center">
       <Header />
-      <div className="w-4/5 h-full justify-center -mt-4 flex items-center">
+      <div
+        className="w-4/5 h-full justify-center -mt-4 flex items-center"
+        onClick={resetState}>
         <ToolBar handleAction={handleAction} toolBarState={toolBarState} />
         <div className="bg-white w-full h-4/5 overflow-hidden">
-          <div className="p-20 text-lg ">
+          <div className="p-20 text-lg">
             <Editor
               editorState={editorState}
               onChange={setEditorState}
               handleBeforeInput={handleBeforeInput}
+              blockStyleFn={blockStyleFn}
             />
           </div>
         </div>
